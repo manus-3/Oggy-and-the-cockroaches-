@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Reset Panel</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #121212;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    button {
+      background: #00c853;
+      color: white;
+      padding: 15px 30px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #00e676;
+    }
+  </style>
+</head>
+<body>
+  <h2>Leaderboard Manual Reset</h2>
+  <p>Click the button below to reset the weekly leaderboard timestamp.</p>
+  <button id="resetBtn">Reset Leaderboard</button>
+  <p id="msg"></p>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVlPYXeHPNLaYy8UQp8c_TQwvEidTuyf4",
+      authDomain: "oggy-runner.firebaseapp.com",
+      projectId: "oggy-runner",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    document.getElementById("resetBtn").onclick = async () => {
+      const now = Date.now();
+      try {
+        await setDoc(doc(db, "config", "last_reset"), {
+          timestamp: now
+        });
+        document.getElementById("msg").innerText = "Leaderboard successfully reset!";
+      } catch (err) {
+        document.getElementById("msg").innerText = "Error resetting: " + err.message;
+      }
+    };
+  </script>
+</body>
+</html>
